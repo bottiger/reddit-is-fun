@@ -1,11 +1,11 @@
-package com.andrewshu.android.reddit.test;
+package com.bottiger.android.reddit.test;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
-import com.andrewshu.android.reddit.Constants;
-import com.andrewshu.android.reddit.Util;
-import com.andrewshu.android.reddit.R;
+import com.bottiger.android.reddit.Constants;
+import com.bottiger.android.reddit.Util;
+import com.bottiger.android.reddit.R;
 
 import junit.framework.TestCase;
 

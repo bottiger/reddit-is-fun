@@ -41,6 +41,10 @@
 		<CheckBoxPreference
 			android:key="save_history"
 			android:title="@string/pref_save_history" />
+		
+		<CheckBoxPreference
+			android:key="lite_interface"
+			android:title="@string/pref_lite_interface" />
 			
 	</PreferenceCategory>
 	

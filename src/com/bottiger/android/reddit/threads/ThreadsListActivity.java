@@ -615,15 +615,15 @@ public final class ThreadsListActivity extends ListActivity {
         ThingInfo item = mThreadsAdapter.getItem(position);
         
         // Redirect directly to comments when item is clicked
-        newThread(item);
-        
-    	// Mark the thread as selected
-    	/*
-    	mVoteTargetThing = item;
-    	mJumpToThreadId = item.getId();
+        if (mSettings.isLiteInterface())
+        	newThread(item);
+        else {
+        	// Mark the thread as selected
+    		mVoteTargetThing = item;
+    		mJumpToThreadId = item.getId();
     	
-    	showDialog(Constants.DIALOG_THREAD_CLICK);
-    	*/
+    		showDialog(Constants.DIALOG_THREAD_CLICK);
+    	}
     }
 
     /**

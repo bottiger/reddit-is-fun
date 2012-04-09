@@ -55,6 +55,7 @@ public class RedditSettings {
 	private boolean confirmQuitOrLogout = true;
 	private boolean saveHistory = true;
 	private boolean alwaysShowNextPrevious = true;
+	private boolean liteInterface = true;
 	
 	private int threadDownloadLimit = Constants.DEFAULT_THREAD_DOWNLOAD_LIMIT;
 	private String commentsSortByUrl = Constants.CommentsSort.SORT_BY_BEST_URL;
@@ -140,6 +141,9 @@ public class RedditSettings {
     	// Save reddit history to Browser history
     	editor.putBoolean(Constants.PREF_SAVE_HISTORY, this.saveHistory);
     	
+    	// Save reddit history to Browser history
+    	editor.putBoolean(Constants.PREF_LITE_INTERFACE, this.liteInterface);
+    	
     	// Whether to always show the next/previous buttons, or only at bottom of list
     	editor.putBoolean(Constants.PREF_ALWAYS_SHOW_NEXT_PREVIOUS, this.alwaysShowNextPrevious);
     	
@@ -209,6 +213,9 @@ public class RedditSettings {
 
         // Save reddit history to Browser history
         this.setSaveHistory(sessionPrefs.getBoolean(Constants.PREF_SAVE_HISTORY, true));
+        
+        // Remove dialog boxes
+        this.setLiteInterface(sessionPrefs.getBoolean(Constants.PREF_LITE_INTERFACE, true));
         
     	// Whether to always show the next/previous buttons, or only at bottom of list
         this.setAlwaysShowNextPrevious(sessionPrefs.getBoolean(Constants.PREF_ALWAYS_SHOW_NEXT_PREVIOUS, true));
@@ -311,6 +318,10 @@ public class RedditSettings {
 	public boolean isSaveHistory() {
 		return saveHistory;
 	}
+	
+	public boolean isLiteInterface() {
+		return liteInterface;
+	}
 
 	public void setConfirmQuitOrLogout(boolean confirmQuitOrLogout) {
 		this.confirmQuitOrLogout = confirmQuitOrLogout;
@@ -320,6 +331,10 @@ public class RedditSettings {
 		this.saveHistory = saveHistory;
 	}
 
+	public void setLiteInterface(boolean liteInterface) {
+		this.liteInterface = liteInterface;
+	}
+	
 	public boolean isAlwaysShowNextPrevious() {
 		return alwaysShowNextPrevious;
 	}

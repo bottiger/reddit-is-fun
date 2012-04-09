@@ -152,6 +152,8 @@
 	<string name="pref_confirm_quit">Quit/logout confirmation</string>
  	
 	<string name="pref_save_history">Save browsing history</string>
+	
+	<string name="pref_lite_interface">Remove various dialogs</string>
  	
 	<!-- Settings label -->
 	<string name="pref_theme">Theme</string>

@@ -20,8 +20,8 @@
 
 <resources>
 
-    <string name="app_name">reddit is fun classic</string>
-    <string name="user_agent">reddit is fun classic (Android) %s</string>
+    <string name="app_name">reddit classic</string>
+    <string name="user_agent">reddit classic (Android) %s</string>
     
     <string name="yes">Yes</string>
     <string name="no">No</string>

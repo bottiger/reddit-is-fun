@@ -474,6 +474,7 @@ public final class PickSubredditActivity extends ListActivity {
         }
     }
     
+    
     protected ArrayList<String> cacheSubredditsList(ArrayList<String> reddits){
     	if (Constants.USE_SUBREDDITS_CACHE) {
     		if (CacheInfo.checkFreshSubredditListCache(getApplicationContext())) {
@@ -483,4 +484,5 @@ public final class PickSubredditActivity extends ListActivity {
     	}
 		return reddits;
     }
+    
 }

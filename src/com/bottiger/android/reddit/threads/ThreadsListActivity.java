@@ -37,6 +37,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.gesture.GesturePoint;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -47,11 +48,14 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextThemeWrapper;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -85,6 +89,7 @@ import com.bottiger.android.reddit.login.LoginTask;
 import com.bottiger.android.reddit.mail.InboxActivity;
 import com.bottiger.android.reddit.mail.PeekEnvelopeTask;
 import com.bottiger.android.reddit.reddits.PickSubredditActivity;
+import com.bottiger.android.reddit.reddits.Subreddits;
 import com.bottiger.android.reddit.reddits.SubscribeTask;
 import com.bottiger.android.reddit.reddits.UnsubscribeTask;
 import com.bottiger.android.reddit.settings.RedditPreferencesPage;
@@ -100,7 +105,7 @@ import com.bottiger.android.reddit.user.ProfileActivity;
  * @author TalkLittle
  *
  */
-public final class ThreadsListActivity extends ListActivity {
+public final class ThreadsListActivity extends SwipeDetectorActivity {
 
 	private static final String TAG = "ThreadsListActivity";
 	private final Pattern REDDIT_PATH_PATTERN = Pattern.compile(Constants.REDDIT_PATH_PATTERN_STRING);
@@ -110,10 +115,10 @@ public final class ThreadsListActivity extends ListActivity {
     /** Custom list adapter that fits our threads data into the list. */
     private ThreadsListAdapter mThreadsAdapter = null;
     private ArrayList<ThingInfo> mThreadsList = null;
+    private ArrayList<String> mSubredditsList = null;
     private static final Object THREAD_ADAPTER_LOCK = new Object();
 
     private final HttpClient mClient = RedditIsFunHttpClientFactory.getGzipHttpClient();
-	
    
     private final RedditSettings mSettings = new RedditSettings();
     
@@ -156,6 +161,9 @@ public final class ThreadsListActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         
 		CookieSyncManager.createInstance(getApplicationContext());
+		
+		mSubredditsList = new Subreddits(getApplicationContext()).getSubreddits();
+		Log.v(TAG, "SubredditList " + mSubredditsList.toString());
 		
         mSettings.loadRedditPreferences(getApplicationContext(), mClient);
         setRequestedOrientation(mSettings.getRotation());
@@ -216,6 +224,16 @@ public final class ThreadsListActivity extends ListActivity {
         	new MyDownloadThreadsTask(mSettings.getHomepage()).execute();
         }
     }
+    
+	@Override
+	protected ArrayList<String> getSubreddits() {
+		return mSubredditsList;
+	}
+	
+	@Override
+	protected String getCurrentSubreddit() {
+		return mSubreddit;
+	}
     
     @Override
     protected void onResume() {

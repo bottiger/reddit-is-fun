@@ -23,6 +23,7 @@ import com.bottiger.android.reddit.reddits.PickSubredditActivity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.webkit.CookieSyncManager;
 
 /*
  * This currently contains a lot of code from PickSubredditActivity.
@@ -86,13 +87,13 @@ public class Subreddits {
 		HttpEntity entity = null;
         try {
         	
-        	reddits = cacheSubredditsList(reddits);
+        	//reddits = cacheSubredditsList(reddits);
         	
         	if (reddits == null) {
         		reddits = new ArrayList<String>();
         		
         		String subredditUrl = Constants.REDDIT_BASE_URL + "/reddits";
-        		if (userSubreddits) subredditUrl = subredditUrl + "/mine";
+        		//if (userSubreddits) subredditUrl = subredditUrl + "/mine";
         		
             	HttpGet request = new HttpGet(subredditUrl);
             	// Set timeout to 15 seconds

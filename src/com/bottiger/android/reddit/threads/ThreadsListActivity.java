@@ -21,6 +21,7 @@ package com.bottiger.android.reddit.threads;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,6 +39,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.gesture.GesturePoint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -115,7 +117,6 @@ public final class ThreadsListActivity extends SwipeDetectorActivity {
     /** Custom list adapter that fits our threads data into the list. */
     private ThreadsListAdapter mThreadsAdapter = null;
     private ArrayList<ThingInfo> mThreadsList = null;
-    private ArrayList<String> mSubredditsList = null;
     private static final Object THREAD_ADAPTER_LOCK = new Object();
 
     private final HttpClient mClient = RedditIsFunHttpClientFactory.getGzipHttpClient();
@@ -160,10 +161,9 @@ public final class ThreadsListActivity extends SwipeDetectorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-		CookieSyncManager.createInstance(getApplicationContext());
-		
-		mSubredditsList = new Subreddits(getApplicationContext()).getSubreddits();
-		Log.v(TAG, "SubredditList " + mSubredditsList.toString());
+		//CookieSyncManager.createInstance(this);
+		//new DownloadSubredditListTask().execute();
+		//Log.v(TAG, "SubredditList " + mSubredditsList.toString());
 		
         mSettings.loadRedditPreferences(getApplicationContext(), mClient);
         setRequestedOrientation(mSettings.getRotation());
@@ -224,11 +224,6 @@ public final class ThreadsListActivity extends SwipeDetectorActivity {
         	new MyDownloadThreadsTask(mSettings.getHomepage()).execute();
         }
     }
-    
-	@Override
-	protected ArrayList<String> getSubreddits() {
-		return mSubredditsList;
-	}
 	
 	@Override
 	protected String getCurrentSubreddit() {
@@ -715,7 +710,7 @@ public final class ThreadsListActivity extends SwipeDetectorActivity {
      * @param subreddit The name of a subreddit ("android", "gaming", etc.)
      *        If the number of elements in subreddit is >= 2, treat 2nd element as "after" 
      */
-    private class MyDownloadThreadsTask extends DownloadThreadsTask {
+    protected class MyDownloadThreadsTask extends DownloadThreadsTask {
     	
     	public MyDownloadThreadsTask(String subreddit) {
 			super(getApplicationContext(),

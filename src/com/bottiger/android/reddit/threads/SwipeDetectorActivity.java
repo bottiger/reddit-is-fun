@@ -1,27 +1,54 @@
 package com.bottiger.android.reddit.threads;
 
 import java.util.ArrayList;
+import java.util.Collections;
+
+import org.apache.http.client.HttpClient;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.bottiger.android.reddit.common.util.Util;
+import com.bottiger.android.reddit.reddits.Subreddits;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.webkit.CookieSyncManager;
 import android.widget.Toast;
 
 public abstract class SwipeDetectorActivity extends ListActivity implements OnGestureListener {
 	
     // List of GesturePoints for calculating gestures
     private GestureDetector mGestureDetector = new GestureDetector(this);
+    private ArrayList<String> mSubredditsList = null;
     
-    protected abstract ArrayList<String> getSubreddits();
     protected abstract String getCurrentSubreddit();
+    
+//    protected abstract class MyDownloadThreadsTask extends DownloadThreadsTask {
+//    	   // declare fields
+//    	   // declare non-abstract methods
+//    	public MyDownloadThreadsTask(String subreddit) {
+//    		super(getApplicationContext(), HttpClient client, ObjectMapper om,
+//    				String sortByUrl, String sortByUrlExtra,
+//    				String subreddit);
+//		}
+//    }
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);
+    	
+    	CookieSyncManager.createInstance(this);
+    	new DownloadSubredditListTask().execute();
+    }
     
     /*
      * Handle touch events.
@@ -30,40 +57,16 @@ public abstract class SwipeDetectorActivity extends ListActivity implements OnGe
     @Override
     public boolean dispatchTouchEvent(MotionEvent event)
     {
-    	int q = event.getAction();
     	Log.i("Pointerlog X", "MyClass.getView() — get position " + event.getX());
     	Log.i("Pointerlog Y", "MyClass.getView() — get position " + event.getY());
     	
-        switch (q)
-        {
-            case MotionEvent.ACTION_DOWN:
-            {
-                //Record the location of the ACTION_DOWN
-                //Either in a GestureDetector or in a variable
-                break;
-            }
-            case MotionEvent.ACTION_MOVE:
-            {
-                //Potentially start consuming events here as you may
-                //have moved to far for a click or scroll
-                //Also scroll the screen as necessary
-                break;
-            }
-            case MotionEvent.ACTION_UP:
-            {
-                //Consume if necessary and perform the fling / swipe action
-                //if it has been determined to be a fling / swipe
-            	if (true) {
-            		int i = 1+1;
-            		i++;
-            	}
-                break;
-            }
-        }
-        
         mGestureDetector.onTouchEvent(event);
         return super.dispatchTouchEvent(event);
     }
+
+	protected ArrayList<String> getSubreddits() {
+		return mSubredditsList;
+	}
     
 	@Override
 	public boolean onDown(MotionEvent e) {return false;}
@@ -89,6 +92,8 @@ public abstract class SwipeDetectorActivity extends ListActivity implements OnGe
             if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                 // Left Swipe
             	subredditIndex++;
+            	subredditIndex++;
+            	subredditIndex++;
             	Toast.makeText(SwipeDetectorActivity.this, "Left Swipe", Toast.LENGTH_SHORT).show();
             }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                 // Right Swipe
@@ -99,6 +104,7 @@ public abstract class SwipeDetectorActivity extends ListActivity implements OnGe
             //FIXME
            	Intent intent = new Intent();
            	String reddit = getSubreddits().get(subredditIndex);
+           	Toast.makeText(SwipeDetectorActivity.this, reddit, Toast.LENGTH_SHORT).show();
            	reddit = "wtf";
            	Uri redditUrl = Util.createSubredditUri(reddit);
            	intent.setData(redditUrl);
@@ -124,6 +130,28 @@ public abstract class SwipeDetectorActivity extends ListActivity implements OnGe
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {return false;}
+	
+	
+	 private class DownloadSubredditListTask extends AsyncTask<Void, Void, ArrayList<String>> {
+	     protected ArrayList<String> doInBackground(Void... voidz) {
+	         ArrayList<String> subreddits = new Subreddits(getApplicationContext()).getSubreddits();
+	         return subreddits;
+	     }
+	     
+	    	@Override
+	    	public void onPreExecute() {
+	    		String[] reddits = Subreddits.DEFAULT_SUBREDDITS;
+	    		mSubredditsList = new ArrayList<String>();
+	    		Collections.addAll(mSubredditsList, reddits);
+	    	}
+
+	     protected void onPostExecute(ArrayList<String> result) {
+	         mSubredditsList = result;
+	     }
+	 }
+	 
+	 
+	 
 
 
 }

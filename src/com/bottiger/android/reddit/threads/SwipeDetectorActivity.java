@@ -1,5 +1,6 @@
 package com.bottiger.android.reddit.threads;
 
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -19,8 +20,6 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
 import android.webkit.CookieSyncManager;
 import android.widget.Toast;
 
@@ -31,16 +30,6 @@ public abstract class SwipeDetectorActivity extends ListActivity implements OnGe
     private ArrayList<String> mSubredditsList = null;
     
     protected abstract String getCurrentSubreddit();
-    
-//    protected abstract class MyDownloadThreadsTask extends DownloadThreadsTask {
-//    	   // declare fields
-//    	   // declare non-abstract methods
-//    	public MyDownloadThreadsTask(String subreddit) {
-//    		super(getApplicationContext(), HttpClient client, ObjectMapper om,
-//    				String sortByUrl, String sortByUrlExtra,
-//    				String subreddit);
-//		}
-//    }
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +81,6 @@ public abstract class SwipeDetectorActivity extends ListActivity implements OnGe
             if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                 // Left Swipe
             	subredditIndex++;
-            	subredditIndex++;
-            	subredditIndex++;
             	Toast.makeText(SwipeDetectorActivity.this, "Left Swipe", Toast.LENGTH_SHORT).show();
             }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                 // Right Swipe
@@ -102,14 +89,11 @@ public abstract class SwipeDetectorActivity extends ListActivity implements OnGe
             }
             
             //FIXME
+            subredditIndex = subredditIndex < 0 ? 0 : subredditIndex;
            	Intent intent = new Intent();
            	String reddit = getSubreddits().get(subredditIndex);
            	Toast.makeText(SwipeDetectorActivity.this, reddit, Toast.LENGTH_SHORT).show();
-           	reddit = "wtf";
-           	Uri redditUrl = Util.createSubredditUri(reddit);
-           	intent.setData(redditUrl);
-           	setResult(RESULT_OK, intent);
-           	finish();	
+           	gotoSubreddit(reddit);
         } catch (Exception e) {
             // nothing
         	int i = 0;
@@ -117,6 +101,8 @@ public abstract class SwipeDetectorActivity extends ListActivity implements OnGe
         }
 		return false;
 	}
+	
+	abstract void gotoSubreddit(String subreddit);
 
 	@Override
 	public void onLongPress(MotionEvent e) {}

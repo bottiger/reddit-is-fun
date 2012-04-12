@@ -19,6 +19,8 @@ import com.bottiger.android.reddit.common.CacheInfo;
 import com.bottiger.android.reddit.common.Constants;
 import com.bottiger.android.reddit.common.RedditIsFunHttpClientFactory;
 import com.bottiger.android.reddit.reddits.PickSubredditActivity;
+import com.bottiger.android.reddit.threads.DownloadThreadsTask;
+import com.bottiger.android.reddit.threads.ThreadsListActivity;
 
 import android.content.Context;
 import android.os.AsyncTask;

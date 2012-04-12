@@ -1575,4 +1575,9 @@ public final class ThreadsListActivity extends SwipeDetectorActivity {
 		    }
         }
     }
+
+	@Override
+	void gotoSubreddit(String subreddit) {
+	    new MyDownloadThreadsTask(subreddit).execute();
+	}
 }

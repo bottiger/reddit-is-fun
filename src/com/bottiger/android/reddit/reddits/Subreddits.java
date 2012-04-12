@@ -115,7 +115,9 @@ public class Subreddits {
                 if (outer.find()) {
                 	Matcher inner = MY_SUBREDDITS_INNER.matcher(outer.group(1));
                 	while (inner.find()) {
-                		reddits.add(inner.group(3));
+                		String subreddit = inner.group(3);
+                		if (!subreddit.startsWith("MultiReddit"))
+                			reddits.add(subreddit);
                 	}
                 } else {
                 	return null;

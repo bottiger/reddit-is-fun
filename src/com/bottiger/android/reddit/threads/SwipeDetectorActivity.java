@@ -49,7 +49,9 @@ public abstract class SwipeDetectorActivity extends ListActivity implements OnGe
     	Log.i("Pointerlog X", "MyClass.getView() — get position " + event.getX());
     	Log.i("Pointerlog Y", "MyClass.getView() — get position " + event.getY());
     	
-        mGestureDetector.onTouchEvent(event);
+        if (mGestureDetector.onTouchEvent(event))
+        	return true;
+        
         return super.dispatchTouchEvent(event);
     }
 

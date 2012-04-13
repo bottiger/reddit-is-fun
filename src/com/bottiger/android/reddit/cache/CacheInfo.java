@@ -17,7 +17,7 @@
  * along with "reddit is fun".  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.bottiger.android.reddit.common;
+package com.bottiger.android.reddit.cache;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -27,6 +27,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import com.bottiger.android.reddit.common.Constants;
 
 import android.content.Context;
 import android.util.Log;

@@ -62,6 +62,7 @@ import android.widget.Toast;
 
 import com.bottiger.android.reddit.R;
 import com.bottiger.android.reddit.browser.BrowserActivity;
+import com.bottiger.android.reddit.cache.CacheInfo;
 import com.bottiger.android.reddit.captcha.CaptchaException;
 import com.bottiger.android.reddit.comments.CommentsListActivity;
 import com.bottiger.android.reddit.common.util.StringUtils;

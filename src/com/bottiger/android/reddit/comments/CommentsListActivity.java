@@ -81,7 +81,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bottiger.android.reddit.R;
-import com.bottiger.android.reddit.common.CacheInfo;
+import com.bottiger.android.reddit.cache.CacheInfo;
 import com.bottiger.android.reddit.common.Common;
 import com.bottiger.android.reddit.common.Constants;
 import com.bottiger.android.reddit.common.RedditIsFunHttpClientFactory;

@@ -21,7 +21,7 @@ import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 
-import com.bottiger.android.reddit.common.CacheInfo;
+import com.bottiger.android.reddit.cache.CacheInfo;
 import com.bottiger.android.reddit.common.Common;
 import com.bottiger.android.reddit.common.Constants;
 import com.bottiger.android.reddit.common.RedditIsFunHttpClientFactory;

@@ -15,7 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import com.bottiger.android.reddit.common.CacheInfo;
+import com.bottiger.android.reddit.cache.CacheInfo;
 import com.bottiger.android.reddit.common.Constants;
 import com.bottiger.android.reddit.common.RedditIsFunHttpClientFactory;
 import com.bottiger.android.reddit.reddits.PickSubredditActivity;

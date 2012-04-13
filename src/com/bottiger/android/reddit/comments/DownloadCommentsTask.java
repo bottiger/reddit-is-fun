@@ -22,8 +22,8 @@ import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bottiger.android.reddit.cache.CacheInfo;
 import com.bottiger.android.reddit.comments.ProcessCommentsTask.DeferredCommentProcessing;
-import com.bottiger.android.reddit.common.CacheInfo;
 import com.bottiger.android.reddit.common.Common;
 import com.bottiger.android.reddit.common.Constants;
 import com.bottiger.android.reddit.common.ProgressInputStream;

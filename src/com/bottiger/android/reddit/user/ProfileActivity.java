@@ -73,10 +73,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bottiger.android.reddit.R;
+import com.bottiger.android.reddit.cache.CacheInfo;
 import com.bottiger.android.reddit.captcha.CaptchaCheckRequiredTask;
 import com.bottiger.android.reddit.captcha.CaptchaDownloadTask;
 import com.bottiger.android.reddit.comments.CommentsListActivity;
-import com.bottiger.android.reddit.common.CacheInfo;
 import com.bottiger.android.reddit.common.Common;
 import com.bottiger.android.reddit.common.Constants;
 import com.bottiger.android.reddit.common.FormValidation;

@@ -49,6 +49,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.Browser;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -111,8 +112,8 @@ public class Common {
 	/**
      * Set the Drawable for the list selector etc. based on the current theme.
      */
-	public static void updateListDrawables(ListActivity la, int theme) {
-		ListView lv = la.getListView();
+	public static void updateListDrawables(ListFragment listFragments, int theme) {
+		ListView lv = listFragments.getListView();
 		if (Util.isLightTheme(theme)) {
 			lv.setBackgroundResource(android.R.color.background_light);
     		lv.setSelector(R.drawable.list_selector_blue);
@@ -121,7 +122,7 @@ public class Common {
     	}
 	}
 	
-    public static void updateNextPreviousButtons(ListActivity act, View nextPreviousView,
+    public static void updateNextPreviousButtons(ListFragment fragment, View nextPreviousView,
     		String after, String before, int count, RedditSettings settings,
     		OnClickListener downloadAfterOnClickListener, OnClickListener downloadBeforeOnClickListener) {
     	boolean shouldShow = after != null || before != null;
@@ -130,10 +131,10 @@ public class Common {
     	
     	// If alwaysShowNextPrevious, use the navbar
     	if (settings.isAlwaysShowNextPrevious()) {
-        	nextPreviousView = act.findViewById(R.id.next_previous_layout);
+        	nextPreviousView = fragment.getActivity().findViewById(R.id.next_previous_layout);
         	if (nextPreviousView == null)
         		return;
-        	View nextPreviousBorder = act.findViewById(R.id.next_previous_border_top);
+        	View nextPreviousBorder = fragment.getActivity().findViewById(R.id.next_previous_border_top);
         	
 			if (shouldShow) {
 		    	if (nextPreviousView != null && nextPreviousBorder != null) {
@@ -146,8 +147,8 @@ public class Common {
 			    	nextPreviousView.setVisibility(View.VISIBLE);
 		    	}
 				// update the "next 25" and "prev 25" buttons
-		    	nextButton = (Button) act.findViewById(R.id.next_button);
-		    	previousButton = (Button) act.findViewById(R.id.previous_button);
+		    	nextButton = (Button) fragment.getActivity().findViewById(R.id.next_button);
+		    	previousButton = (Button) fragment.getActivity().findViewById(R.id.previous_button);
 			} else {
 				nextPreviousView.setVisibility(View.GONE);
 	    	}

@@ -93,7 +93,7 @@ public class Common {
 		t.show();
 	}
 	
-    public static boolean shouldLoadThumbnails(Activity activity, RedditSettings settings) {
+    public static boolean shouldLoadThumbnails(Context activity, RedditSettings settings) {
     	//check for wifi connection and wifi thumbnail setting
     	boolean thumbOkay = true;
     	if (settings.isLoadThumbnailsOnlyWifi())

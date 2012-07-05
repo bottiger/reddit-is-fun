@@ -15,6 +15,7 @@ import android.app.ListActivity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,7 +27,7 @@ import com.bottiger.android.reddit.threads.ShowThumbnailsTask.ThumbnailLoadActio
 
 public class ShowThumbnailsTask extends AsyncTask<ThumbnailLoadAction, ThumbnailLoadAction, Void> {
 	
-	private ListActivity mActivity;
+	private ListFragment mFragment;
 	private HttpClient mClient;
 	private Integer mDefaultThumbnailResource;
 	
@@ -34,8 +35,8 @@ public class ShowThumbnailsTask extends AsyncTask<ThumbnailLoadAction, Thumbnail
 	
 	private static final String TAG = "ShowThumbnailsTask";
 
-	public ShowThumbnailsTask(ListActivity activity, HttpClient client, Integer defaultThumbnailResource) {
-		this.mActivity = activity;
+	public ShowThumbnailsTask(ListFragment fragment, HttpClient client, Integer defaultThumbnailResource) {
+		this.mFragment = fragment;
 		this.mClient = client;
 		this.mDefaultThumbnailResource = defaultThumbnailResource;
 	}
@@ -137,8 +138,8 @@ public class ShowThumbnailsTask extends AsyncTask<ThumbnailLoadAction, Thumbnail
 		}
 		else {
 			if (isCurrentlyOnScreenUI(thumbnailLoadAction.threadIndex)) {
-				int positionOnScreen = thumbnailLoadAction.threadIndex - mActivity.getListView().getFirstVisiblePosition();
-				View v = mActivity.getListView().getChildAt(positionOnScreen);
+				int positionOnScreen = thumbnailLoadAction.threadIndex - mFragment.getListView().getFirstVisiblePosition();
+				View v = mFragment.getListView().getChildAt(positionOnScreen);
 				if (v != null) {
 					View thumbnailImageView = v.findViewById(R.id.thumbnail);
 					if (thumbnailImageView != null) {
@@ -157,8 +158,8 @@ public class ShowThumbnailsTask extends AsyncTask<ThumbnailLoadAction, Thumbnail
 	}
 	
 	private boolean isCurrentlyOnScreenUI(int position) {
-		return position >= mActivity.getListView().getFirstVisiblePosition() &&
-				position <= mActivity.getListView().getLastVisiblePosition();
+		return position >= mFragment.getListView().getFirstVisiblePosition() &&
+				position <= mFragment.getListView().getLastVisiblePosition();
 	}
 	
 }

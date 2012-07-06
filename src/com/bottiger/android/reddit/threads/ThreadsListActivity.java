@@ -140,10 +140,12 @@ public final class ThreadsListActivity extends FragmentActivity {
 	private String mAfter = null;
 	private String mBefore = null;
 	private volatile int mCount = Constants.DEFAULT_THREAD_DOWNLOAD_LIMIT;
+	
 	// The after, before, and count to navigate to current page
 	private String mLastAfter = null;
 	private String mLastBefore = null;
 	private volatile int mLastCount = 0;
+
 	private String mSortByUrl = Constants.ThreadsSort.SORT_BY_HOT_URL;
 	private String mSortByUrlExtra = "";
 	private String mJumpToThreadId = null;
@@ -157,10 +159,7 @@ public final class ThreadsListActivity extends FragmentActivity {
 
 	// UI State
 	private ThingInfo mVoteTargetThing = null;
-	private DownloadThreadsTask mCurrentDownloadThreadsTask = null;
-	private final Object mCurrentDownloadThreadsTaskLock = new Object();
-	
-	private final ObjectMapper mObjectMapper = Common.getObjectMapper();
+
 	
 	private final Pattern REDDIT_PATH_PATTERN = Pattern
 	.compile(Constants.REDDIT_PATH_PATTERN_STRING);
@@ -226,13 +225,11 @@ public final class ThreadsListActivity extends FragmentActivity {
 			if (mThreadsList == null) {
 				// Load previous view of threads
 				if (mLastAfter != null) {
-					new MyDownloadThreadsTask(mSubreddit, mLastAfter, null,
-							mLastCount).execute();
+					//new SubRedditFragment.MyDownloadThreadsTask(mSubreddit, mLastAfter, null, mLastCount).execute(); FIXME
 				} else if (mLastBefore != null) {
-					new MyDownloadThreadsTask(mSubreddit, null,
-							mLastBefore, mLastCount).execute();
+					//new SubRedditFragment.MyDownloadThreadsTask(mSubreddit, null,mLastBefore, mLastCount).execute(); FIXME
 				} else {
-					new MyDownloadThreadsTask(mSubreddit).execute();
+					//new SubRedditFragment.MyDownloadThreadsTask(mSubreddit).execute(); FIXME
 				}
 			} else {
 				// Orientation change. Use prior instance.
@@ -248,16 +245,14 @@ public final class ThreadsListActivity extends FragmentActivity {
 			Matcher redditContextMatcher = REDDIT_PATH_PATTERN
 					.matcher(getIntent().getData().getPath());
 			if (redditContextMatcher.matches()) {
-				new MyDownloadThreadsTask(redditContextMatcher.group(1))
-						.execute();
+				// new SubRedditFragment.MyDownloadThreadsTask(redditContextMatcher.group(1)).execute(); FIXME
 			} else {
-				new MyDownloadThreadsTask(mSettings.getHomepage())
-						.execute();
+				// new SubRedditFragment.MyDownloadThreadsTask(mSettings.getHomepage()).execute(); FIXME
 			}
 		}
 		// No subreddit specified by Intent, so load the user's home reddit
 		else {
-			new MyDownloadThreadsTask(mSettings.getHomepage()).execute();
+			//new SubRedditFragment.MyDownloadThreadsTask(mSettings.getHomepage()).execute(); FIXME
 		}
 
 	}
@@ -270,23 +265,6 @@ public final class ThreadsListActivity extends FragmentActivity {
 	@SuppressWarnings("unchecked")
 	private void restoreLastNonConfigurationInstance() {
 		mThreadsList = (ArrayList<ThingInfo>) getLastNonConfigurationInstance();
-	}
-	
-	
-	/**
-	 * Jump to thread whose id is mJumpToThreadId. Then clear
-	 * mJumpToThreadId.
-	 */
-	private void jumpToThread() {
-		if (mJumpToThreadId == null || mThreadsAdapter == null)
-			return;
-		for (int k = 0; k < mThreadsAdapter.getCount(); k++) {
-			if (mJumpToThreadId.equals(mThreadsAdapter.getItem(k).getId())) {
-				//getListView().setSelection(k); FIXME
-				mJumpToThreadId = null;
-				break;
-			}
-		}
 	}
 	
 	/**
@@ -422,7 +400,7 @@ public final class ThreadsListActivity extends FragmentActivity {
 			break;
 		case R.id.refresh_menu_id:
 			CacheInfo.invalidateCachedSubreddit(getApplicationContext());
-			new MyDownloadThreadsTask(mSubreddit).execute();
+			//new MyDownloadThreadsTask(mSubreddit).execute(); FIXME
 			break;
 		case R.id.submit_link_menu_id:
 			Intent submitLinkIntent = new Intent(getApplicationContext(),
@@ -487,7 +465,7 @@ public final class ThreadsListActivity extends FragmentActivity {
 		Common.doLogout(mSettings, mClient, getApplicationContext());
 		Toast.makeText(this, "You have been logged out.",
 				Toast.LENGTH_SHORT).show();
-		new MyDownloadThreadsTask(mSubreddit).execute();
+		//new MyDownloadThreadsTask(mSubreddit).execute(); FIXME
 	}
 	
 	/**
@@ -520,155 +498,6 @@ public final class ThreadsListActivity extends FragmentActivity {
 		}
 	}
 	
-	private class MyLoginTask extends LoginTask {
-		public MyLoginTask(String username, String password) {
-			super(username, password, mSettings, mClient,
-					getApplicationContext());
-		}
-
-		@Override
-		protected void onPreExecute() {
-			showDialog(Constants.DIALOG_LOGGING_IN);
-		}
-
-		@Override
-		protected void onPostExecute(Boolean success) {
-			removeDialog(Constants.DIALOG_LOGGING_IN);
-			if (success) {
-				Toast.makeText(ThreadsListActivity.this,
-						"Logged in as " + mUsername, Toast.LENGTH_SHORT)
-						.show();
-				// Check mail
-				new PeekEnvelopeTask(getApplicationContext(), mClient,
-						mSettings.getMailNotificationStyle()).execute();
-				// Refresh the threads list
-				new MyDownloadThreadsTask(mSubreddit).execute();
-			} else {
-				Common.showErrorToast(mUserError, Toast.LENGTH_LONG,
-						ThreadsListActivity.this);
-			}
-		}
-	}
-	
-	/**
-	 * Given a subreddit name string, starts the threadlist-download-thread
-	 * going.
-	 * 
-	 * @param subreddit
-	 *            The name of a subreddit ("android", "gaming", etc.) If the
-	 *            number of elements in subreddit is >= 2, treat 2nd element
-	 *            as "after"
-	 */
-	protected class MyDownloadThreadsTask extends DownloadThreadsTask {
-
-		public MyDownloadThreadsTask(String subreddit) {
-			super(getApplicationContext(),
-					ThreadsListActivity.this.mClient,
-					ThreadsListActivity.this.mObjectMapper,
-					ThreadsListActivity.this.mSortByUrl,
-					ThreadsListActivity.this.mSortByUrlExtra, subreddit);
-		}
-
-		public MyDownloadThreadsTask(String subreddit, String after,
-				String before, int count) {
-			super(getApplicationContext(),
-					ThreadsListActivity.this.mClient,
-					ThreadsListActivity.this.mObjectMapper,
-					ThreadsListActivity.this.mSortByUrl,
-					ThreadsListActivity.this.mSortByUrlExtra, subreddit,
-					after, before, count);
-		}
-
-		@Override
-		protected void saveState() {
-			mSettings.setModhash(mModhash);
-			ThreadsListActivity.this.mSubreddit = mSubreddit;
-			ThreadsListActivity.this.mLastAfter = mLastAfter;
-			ThreadsListActivity.this.mLastBefore = mLastBefore;
-			ThreadsListActivity.this.mLastCount = mLastCount;
-			ThreadsListActivity.this.mAfter = mAfter;
-			ThreadsListActivity.this.mBefore = mBefore;
-			ThreadsListActivity.this.mCount = mCount;
-			ThreadsListActivity.this.mSortByUrl = mSortByUrl;
-			ThreadsListActivity.this.mSortByUrlExtra = mSortByUrlExtra;
-		}
-
-		@Override
-		public void onPreExecute() {
-			synchronized (mCurrentDownloadThreadsTaskLock) {
-				if (mCurrentDownloadThreadsTask != null) {
-					this.cancel(true);
-					return;
-				}
-				mCurrentDownloadThreadsTask = this;
-			}
-			//resetUI(null); FIXME removed when implementing fragments
-			//enableLoadingScreen();
-
-			if (mContentLength == -1) {
-				getWindow().setFeatureInt(Window.FEATURE_PROGRESS,
-						Window.PROGRESS_INDETERMINATE_ON);
-			} else {
-				getWindow().setFeatureInt(Window.FEATURE_PROGRESS, 0);
-			}
-
-			if (Constants.FRONTPAGE_STRING.equals(mSubreddit))
-				setTitle("reddit.com: what's new online!");
-			else
-				setTitle("/r/" + mSubreddit.trim());
-		}
-
-		@Override
-		public void onPostExecute(Boolean success) {
-			synchronized (mCurrentDownloadThreadsTaskLock) {
-				mCurrentDownloadThreadsTask = null;
-			}
-
-			//disableLoadingScreen(); FIXME
-
-			if (mContentLength == -1)
-				getWindow().setFeatureInt(Window.FEATURE_PROGRESS,
-						Window.PROGRESS_INDETERMINATE_OFF);
-			else
-				getWindow().setFeatureInt(Window.FEATURE_PROGRESS,
-						Window.PROGRESS_END);
-
-			if (success) {
-				synchronized (THREAD_ADAPTER_LOCK) {
-					mThreadsList.addAll(mThingInfos);
-					mThreadsAdapter.notifyDataSetChanged();
-				}
-
-				//showThumbnails(mThingInfos); FIXME
-
-				// updateNextPreviousButtons(); FIXME
-
-				// Point the list to last thread user was looking at, if any
-				jumpToThread();
-			} else {
-				if (!isCancelled())
-					Common.showErrorToast(mUserError, Toast.LENGTH_LONG,
-							ThreadsListActivity.this);
-			}
-		}
-
-		@Override
-		public void onProgressUpdate(Long... progress) {
-			if (mContentLength == -1) {
-				getWindow().setFeatureInt(Window.FEATURE_PROGRESS,
-						Window.PROGRESS_INDETERMINATE_ON);
-			} else {
-				getWindow().setFeatureInt(
-						Window.FEATURE_PROGRESS,
-						progress[0].intValue() * (Window.PROGRESS_END - 1)
-								/ (int) mContentLength);
-			}
-		}
-
-		public void propertyChange(PropertyChangeEvent event) {
-			publishProgress((Long) event.getNewValue());
-		}
-	}
 
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -736,10 +565,18 @@ public final class ThreadsListActivity extends FragmentActivity {
 		private final Pattern REDDIT_PATH_PATTERN = Pattern
 		.compile(Constants.REDDIT_PATH_PATTERN_STRING);
 		
+		// The after, before, and count to navigate to current page
+		private String mLastAfter = null;
+		private String mLastBefore = null;
+		private volatile int mLastCount = 0;
+		
 		
 		private String mJumpToThreadId = null;
 		private ThingInfo mVoteTargetThing = null;
 		private View mNextPreviousView = null;
+		
+		private DownloadThreadsTask mCurrentDownloadThreadsTask = null;
+		private final Object mCurrentDownloadThreadsTaskLock = new Object();
 		
 		// The after, before, and count to navigate away from current page of
 		// results
@@ -749,6 +586,8 @@ public final class ThreadsListActivity extends FragmentActivity {
 		
 		private String mSortByUrl = Constants.ThreadsSort.SORT_BY_HOT_URL;
 		private String mSortByUrlExtra = "";
+		
+		private final ObjectMapper mObjectMapper = Common.getObjectMapper();
 		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -1677,14 +1516,12 @@ public final class ThreadsListActivity extends FragmentActivity {
 
 		private final OnClickListener downloadAfterOnClickListener = new OnClickListener() {
 			public void onClick(View v) {
-				new MyDownloadThreadsTask(mSubreddit, mAfter, null, mCount)
-						.execute();
+				//new MyDownloadThreadsTask(mSubreddit, mAfter, null, mCount).execute(); FIXME
 			}
 		};
 		private final OnClickListener downloadBeforeOnClickListener = new OnClickListener() {
 			public void onClick(View v) {
-				new MyDownloadThreadsTask(mSubreddit, null, mBefore, mCount)
-						.execute();
+				//new MyDownloadThreadsTask(mSubreddit, null, mBefore, mCount).execute(); FIXME 
 			}
 		};
 
@@ -1695,7 +1532,7 @@ public final class ThreadsListActivity extends FragmentActivity {
 				if (Constants.ThreadsSort.SORT_BY_HOT.equals(itemString)) {
 					mSortByUrl = Constants.ThreadsSort.SORT_BY_HOT_URL;
 					mSortByUrlExtra = "";
-					new MyDownloadThreadsTask(mSubreddit).execute();
+					//new MyDownloadThreadsTask(mSubreddit).execute(); FIXME
 				} else if (Constants.ThreadsSort.SORT_BY_NEW.equals(itemString)) {
 					//showDialog(Constants.DIALOG_SORT_BY_NEW); FIXME
 				} else if (Constants.ThreadsSort.SORT_BY_CONTROVERSIAL
@@ -1856,8 +1693,8 @@ public final class ThreadsListActivity extends FragmentActivity {
 			mThreadsAdapter.notifyDataSetChanged();
 		}
 
-		@Override
-		protected void onSaveInstanceState(Bundle state) {
+		//@Override FIXME
+		public void onSaveInstanceState(Bundle state) {
 			super.onSaveInstanceState(state);
 			state.putString(Constants.SUBREDDIT_KEY, mSubreddit);
 			state.putString(Constants.ThreadsSort.SORT_BY_KEY, mSortByUrl);
@@ -1878,9 +1715,9 @@ public final class ThreadsListActivity extends FragmentActivity {
 		 * 
 		 * @see android.app.Activity#onRestoreInstanceState
 		 */
-		@Override
+		//@Override FIXME
 		protected void onRestoreInstanceState(Bundle state) {
-			super.onRestoreInstanceState(state);
+			//super.onRestoreInstanceState(state);
 			final int[] myDialogs = { Constants.DIALOG_LOGGING_IN,
 					Constants.DIALOG_LOGIN, Constants.DIALOG_SORT_BY,
 					Constants.DIALOG_SORT_BY_CONTROVERSIAL,
@@ -1888,16 +1725,182 @@ public final class ThreadsListActivity extends FragmentActivity {
 					Constants.DIALOG_THREAD_CLICK, };
 			for (int dialog : myDialogs) {
 				try {
-					removeDialog(dialog);
+					SubRedditFragment.this.getActivity().removeDialog(dialog);
 				} catch (IllegalArgumentException e) {
 					// Ignore.
 				}
 			}
 		}
 
-		@Override
+		//@Override FIXME
 		void gotoSubreddit(String subreddit) {
 			new MyDownloadThreadsTask(subreddit).execute();
+		}
+		
+		/**
+		 * Jump to thread whose id is mJumpToThreadId. Then clear
+		 * mJumpToThreadId.
+		 */
+		private void jumpToThread() {
+			if (mJumpToThreadId == null || mThreadsAdapter == null)
+				return;
+			for (int k = 0; k < mThreadsAdapter.getCount(); k++) {
+				if (mJumpToThreadId.equals(mThreadsAdapter.getItem(k).getId())) {
+					//getListView().setSelection(k); FIXME
+					mJumpToThreadId = null;
+					break;
+				}
+			}
+		}
+		
+		/**
+		 * Given a subreddit name string, starts the threadlist-download-thread
+		 * going.
+		 * 
+		 * @param subreddit
+		 *            The name of a subreddit ("android", "gaming", etc.) If the
+		 *            number of elements in subreddit is >= 2, treat 2nd element
+		 *            as "after"
+		 */
+		protected class MyDownloadThreadsTask extends DownloadThreadsTask {
+
+			public MyDownloadThreadsTask(String subreddit) {
+				super(SubRedditFragment.this.mContext,
+						SubRedditFragment.this.mClient,
+						SubRedditFragment.this.mObjectMapper,
+						SubRedditFragment.this.mSortByUrl,
+						SubRedditFragment.this.mSortByUrlExtra, subreddit);
+			}
+
+			public MyDownloadThreadsTask(String subreddit, String after,
+					String before, int count) {
+				super(SubRedditFragment.this.mContext,
+						SubRedditFragment.this.mClient,
+						SubRedditFragment.this.mObjectMapper,
+						SubRedditFragment.this.mSortByUrl,
+						SubRedditFragment.this.mSortByUrlExtra, subreddit,
+						after, before, count);
+			}
+
+			@Override
+			protected void saveState() {
+				mSettings.setModhash(mModhash);
+				SubRedditFragment.this.mSubreddit = mSubreddit;
+				SubRedditFragment.this.mLastAfter = mLastAfter;
+				SubRedditFragment.this.mLastBefore = mLastBefore;
+				SubRedditFragment.this.mLastCount = mLastCount;
+				SubRedditFragment.this.mAfter = mAfter;
+				SubRedditFragment.this.mBefore = mBefore;
+				SubRedditFragment.this.mCount = mCount;
+				SubRedditFragment.this.mSortByUrl = mSortByUrl;
+				SubRedditFragment.this.mSortByUrlExtra = mSortByUrlExtra;
+			}
+
+			@Override
+			public void onPreExecute() {
+				synchronized (mCurrentDownloadThreadsTaskLock) {
+					if (mCurrentDownloadThreadsTask != null) {
+						this.cancel(true);
+						return;
+					}
+					mCurrentDownloadThreadsTask = this;
+				}
+				//resetUI(null); FIXME removed when implementing fragments
+				//enableLoadingScreen();
+
+				if (mContentLength == -1) {
+					SubRedditFragment.this.getActivity().getWindow().setFeatureInt(Window.FEATURE_PROGRESS,
+							Window.PROGRESS_INDETERMINATE_ON);
+				} else {
+					SubRedditFragment.this.getActivity().getWindow().setFeatureInt(Window.FEATURE_PROGRESS, 0);
+				}
+
+				if (Constants.FRONTPAGE_STRING.equals(mSubreddit))
+					SubRedditFragment.this.getActivity().setTitle("reddit.com: what's new online!");
+				else
+					SubRedditFragment.this.getActivity().setTitle("/r/" + mSubreddit.trim());
+			}
+
+			@Override
+			public void onPostExecute(Boolean success) {
+				synchronized (mCurrentDownloadThreadsTaskLock) {
+					mCurrentDownloadThreadsTask = null;
+				}
+
+				//disableLoadingScreen(); FIXME
+
+				if (mContentLength == -1)
+					SubRedditFragment.this.getActivity().getWindow().setFeatureInt(Window.FEATURE_PROGRESS,
+							Window.PROGRESS_INDETERMINATE_OFF);
+				else
+					SubRedditFragment.this.getActivity().getWindow().setFeatureInt(Window.FEATURE_PROGRESS,
+							Window.PROGRESS_END);
+
+				if (success) {
+					synchronized (THREAD_ADAPTER_LOCK) {
+						mThreadsList.addAll(mThingInfos);
+						mThreadsAdapter.notifyDataSetChanged();
+					}
+
+					//showThumbnails(mThingInfos); FIXME
+
+					// updateNextPreviousButtons(); FIXME
+
+					// Point the list to last thread user was looking at, if any
+					SubRedditFragment.this.jumpToThread();
+				} else {
+					if (!isCancelled())
+						Common.showErrorToast(mUserError, Toast.LENGTH_LONG,
+								SubRedditFragment.this.mContext);
+				}
+			}
+
+			@Override
+			public void onProgressUpdate(Long... progress) {
+				if (mContentLength == -1) {
+					SubRedditFragment.this.getActivity().getWindow().setFeatureInt(Window.FEATURE_PROGRESS,
+							Window.PROGRESS_INDETERMINATE_ON);
+				} else {
+					SubRedditFragment.this.getActivity().getWindow().setFeatureInt(
+							Window.FEATURE_PROGRESS,
+							progress[0].intValue() * (Window.PROGRESS_END - 1)
+									/ (int) mContentLength);
+				}
+			}
+
+			public void propertyChange(PropertyChangeEvent event) {
+				publishProgress((Long) event.getNewValue());
+			}
+		}
+		
+		private class MyLoginTask extends LoginTask {
+			public MyLoginTask(String username, String password) {
+				super(username, password, SubRedditFragment.this.mSettings, SubRedditFragment.this.mClient,
+						SubRedditFragment.this.mContext);
+			}
+
+			@Override
+			protected void onPreExecute() {
+				SubRedditFragment.this.getActivity().showDialog(Constants.DIALOG_LOGGING_IN);
+			}
+
+			@Override
+			protected void onPostExecute(Boolean success) {
+				SubRedditFragment.this.getActivity().removeDialog(Constants.DIALOG_LOGGING_IN);
+				if (success) {
+					Toast.makeText(SubRedditFragment.this.mContext,
+							"Logged in as " + mUsername, Toast.LENGTH_SHORT)
+							.show();
+					// Check mail
+					new PeekEnvelopeTask(SubRedditFragment.this.mContext, SubRedditFragment.this.mClient,
+							SubRedditFragment.this.mSettings.getMailNotificationStyle()).execute();
+					// Refresh the threads list
+					new MyDownloadThreadsTask(mSubreddit).execute();
+				} else {
+					Common.showErrorToast(mUserError, Toast.LENGTH_LONG,
+							SubRedditFragment.this.mContext);
+				}
+			}
 		}
 
 	}

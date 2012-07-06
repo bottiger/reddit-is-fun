@@ -401,9 +401,9 @@ public class CommentsListActivity extends ListActivity
 	            		view = mInflater.inflate(R.layout.threads_list_item, null);
 	            	}
 	            	
-	            	ThreadsListActivity.fillThreadsListItemView(
-	            			position, view, item, CommentsListActivity.this, mClient, mSettings, mThumbnailOnClickListenerFactory
-        			);
+	            	//ThreadsListActivity.fillThreadsListItemView( FIXME
+	            	//		position, view, item, CommentsListActivity.this, mClient, mSettings, mThumbnailOnClickListenerFactory
+        			//);
 	            	if (item.isIs_self()) {
 	            		View thumbnailContainer = view.findViewById(R.id.thumbnail_view);
 	            		if (thumbnailContainer != null)
@@ -588,7 +588,7 @@ public class CommentsListActivity extends ListActivity
         mCommentsAdapter.mIsLoading = false;
         mCommentsAdapter.notifyDataSetChanged();  // Just in case
         getListView().setDivider(null);
-        Common.updateListDrawables(this, mSettings.getTheme());
+        //Common.updateListDrawables(this, mSettings.getTheme()); FIXME
     }
     
     /**
@@ -2079,11 +2079,11 @@ public class CommentsListActivity extends ListActivity
 			getNewDownloadCommentsTask().execute(Constants.DEFAULT_COMMENT_DOWNLOAD_LIMIT);
 		}
 	};
-	
+	/*
 	private final ThumbnailOnClickListenerFactory mThumbnailOnClickListenerFactory
 			= new ThumbnailOnClickListenerFactory() {
-		@Override
-		public OnClickListener getThumbnailOnClickListener(final ThingInfo threadThingInfo, final Activity activity) {
+		//@Override
+		/*public OnClickListener getThumbnailOnClickListener(final ThingInfo threadThingInfo, final Activity activity) {
 			return new OnClickListener() {
 				public void onClick(View v) {
 					setLinkClicked(threadThingInfo);
@@ -2098,8 +2098,8 @@ public class CommentsListActivity extends ListActivity
 					);
 				}
 			};
-		}
-	};
+		} //FIXME
+	};*/
 	
 	private void setLinkClicked(ThingInfo threadThingInfo) {
 		threadThingInfo.setClicked(true);

@@ -456,7 +456,7 @@ public class DownloadCommentsTask extends AsyncTask<Integer, Long, Boolean>
 	    	synchronized (mCurrentShowThumbnailsTaskLock) {
 	    		if (mCurrentShowThumbnailsTask != null)
 	    			mCurrentShowThumbnailsTask.cancel(true);
-	    		mCurrentShowThumbnailsTask = new ShowThumbnailsTask(mActivity, mClient, null);
+	    		//mCurrentShowThumbnailsTask = new ShowThumbnailsTask(mActivity, mClient, null); FIXME
 	    	}
 	    	mCurrentShowThumbnailsTask.execute(new ThumbnailLoadAction(mOpThingInfo, null, 0));
 		}

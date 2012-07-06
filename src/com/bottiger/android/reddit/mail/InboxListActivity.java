@@ -438,7 +438,7 @@ public final class InboxListActivity extends ListActivity
 		    mMessagesAdapter.notifyDataSetChanged();  // Just in case
 		}
     	getListView().setDivider(null);
-        Common.updateListDrawables(this, mSettings.getTheme());
+        //Common.updateListDrawables(this, mSettings.getTheme()); FIXME
         updateNextPreviousButtons();
     }
     
@@ -463,8 +463,8 @@ public final class InboxListActivity extends ListActivity
     }
 
     private void updateNextPreviousButtons() {
-    	Common.updateNextPreviousButtons(this, mNextPreviousView, mAfter, mBefore, mCount, mSettings,
-    			downloadAfterOnClickListener, downloadBeforeOnClickListener);
+    	//Common.updateNextPreviousButtons(this, mNextPreviousView, mAfter, mBefore, mCount, mSettings,
+    	//		downloadAfterOnClickListener, downloadBeforeOnClickListener); FIXME
     }
 
         

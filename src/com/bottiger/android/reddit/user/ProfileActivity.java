@@ -328,9 +328,10 @@ public final class ProfileActivity extends ListActivity
 	                view = convertView;
 	            }
 	            
-	            ThreadsListActivity.fillThreadsListItemView(
-	            		position, view, item, ProfileActivity.this, mClient, mSettings, mThumbnailOnClickListenerFactory
-        		);
+	            // FIXME
+	            //ThreadsListActivity.SubRedditFragment.fillThreadsListItemView(
+	            //		position, view, item, ProfileActivity.this, mClient, mSettings, mThumbnailOnClickListenerFactory
+        		//);
             }
             
             else if (getItemViewType(position) == COMMENT_ITEM_VIEW_TYPE) {
@@ -454,7 +455,7 @@ public final class ProfileActivity extends ListActivity
 		    mThingsAdapter.notifyDataSetChanged();  // Just in case
 		}
     	getListView().setDivider(null);
-        Common.updateListDrawables(this, mSettings.getTheme());
+        //Common.updateListDrawables(this, mSettings.getTheme()); FIXME
         updateNextPreviousButtons();
     }
     
@@ -479,8 +480,8 @@ public final class ProfileActivity extends ListActivity
     }
 
     private void updateNextPreviousButtons() {
-    	Common.updateNextPreviousButtons(this, mNextPreviousView, mAfter, mBefore, mCount, mSettings,
-    			downloadAfterOnClickListener, downloadBeforeOnClickListener);
+    	//Common.updateNextPreviousButtons(this, mNextPreviousView, mAfter, mBefore, mCount, mSettings,
+    	//		downloadAfterOnClickListener, downloadBeforeOnClickListener); FIXME
     }
     
     private void updateKarma() {
@@ -789,7 +790,7 @@ public final class ProfileActivity extends ListActivity
     	for (int i = 0; i < thumbnailLoadActions.length; i++) {
     		thumbnailLoadActions[i] = new ThumbnailLoadAction(thingInfos.get(i), null, i);
     	}
-    	new ShowThumbnailsTask(this, mClient, R.drawable.go_arrow).execute(thumbnailLoadActions);
+    	//new ShowThumbnailsTask(this, mClient, R.drawable.go_arrow).execute(thumbnailLoadActions); FIXME
     }
     
     
@@ -1150,7 +1151,7 @@ public final class ProfileActivity extends ListActivity
     		break;
     		
     	case Constants.DIALOG_THREAD_CLICK:
-    		ThreadsListActivity.fillThreadClickDialog(dialog, mVoteTargetThingInfo, mSettings, mThreadClickDialogOnClickListenerFactory);
+    		//ThreadsListActivity.fillThreadClickDialog(dialog, mVoteTargetThingInfo, mSettings, mThreadClickDialogOnClickListenerFactory); FIXME
     		break;
     		
 		default:
@@ -1175,6 +1176,7 @@ public final class ProfileActivity extends ListActivity
 		}
 	};
 	
+	/*  FIXME
 	private final ThumbnailOnClickListenerFactory mThumbnailOnClickListenerFactory
 			= new ThumbnailOnClickListenerFactory() {
 		@Override
@@ -1195,7 +1197,7 @@ public final class ProfileActivity extends ListActivity
 				}
 			};
 		}
-	};
+	};*/
 	
 	private final ThreadClickDialogOnClickListenerFactory mThreadClickDialogOnClickListenerFactory
 			= new ThreadClickDialogOnClickListenerFactory() {

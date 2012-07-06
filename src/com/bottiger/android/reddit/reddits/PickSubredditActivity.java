@@ -199,7 +199,7 @@ public final class PickSubredditActivity extends ListActivity {
 		    mSubredditsAdapter.mLoading = false;
 		    mSubredditsAdapter.notifyDataSetChanged();  // Just in case
 		}
-	    Common.updateListDrawables(this, mSettings.getTheme());
+	    //Common.updateListDrawables(this, mSettings.getTheme()); FIXME
 	    
         // Set the EditText to do same thing as onListItemClick
         mEt = (EditText) findViewById(R.id.pick_subreddit_input);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Copyright 2009 Andrew Shu
+ * Copyright 2012 Arvid Böttiger
  *
  * This file is part of "reddit is fun".
  *
@@ -20,8 +21,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.bottiger.android.reddit"
       
-      android:versionCode="85"
-      android:versionName="1.3.2"
+      android:versionCode="86"
+      android:versionName="1.9.0"
       >
 
     <uses-permission android:name="android.permission.INTERNET" />

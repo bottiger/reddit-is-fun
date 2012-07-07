@@ -182,8 +182,8 @@ public final class ThreadsListActivity extends FragmentActivity {
 		mSettings.loadRedditPreferences(getApplicationContext(), mClient);
 		setRequestedOrientation(mSettings.getRotation());
 		setTheme(mSettings.getTheme());
-		requestWindowFeature(Window.FEATURE_PROGRESS);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		//requestWindowFeature(Window.FEATURE_PROGRESS); FIXME
+		//requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS); FIXME
 		
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections
@@ -514,7 +514,12 @@ public final class ThreadsListActivity extends FragmentActivity {
 		public Fragment getItem(int i) {
 			Fragment fragment = new SubRedditFragment(getApplicationContext());
 			Subreddits subreddits = new Subreddits(getApplicationContext());
-			ArrayList<String> reddits = subreddits.getSubreddits();
+			
+			ArrayList<String> reddits = new ArrayList<String>();
+			reddits.add("android");
+			reddits.add("apple");
+			reddits.add("netsec");
+			//ArrayList<String> reddits = subreddits.getSubreddits(); FIXME
 			String subreddit = reddits.get(i+1);
 			Bundle args = new Bundle();
 			args.putInt(SubRedditFragment.ARG_SECTION_NUMBER, i);
@@ -596,8 +601,8 @@ public final class ThreadsListActivity extends FragmentActivity {
 			TextView textView = new TextView(getActivity());
 			textView.setGravity(Gravity.CENTER);
 			Bundle args = getArguments();
-			textView.setText(Integer.toString(args.getInt(ARG_SECTION_NUMBER)));
-			
+			//textView.setText(Integer.toString(args.getInt(ARG_SECTION_NUMBER)));
+			textView.setText("test"); //FIXME
 			if (savedInstanceState != null) {
 				if (Constants.LOGGING)
 					Log.d(TAG, "using savedInstanceState");
@@ -624,9 +629,9 @@ public final class ThreadsListActivity extends FragmentActivity {
 
 			// CookieSyncManager.createInstance(this);
 			// new DownloadSubredditListTask().execute();
-			// Log.v(TAG, "SubredditList " + mSubredditsList.toString());
+			//Log.v(TAG, "SubredditList " + mSubredditsList.toString());
 
-			registerForContextMenu(getListView());
+			//registerForContextMenu(getListView()); FIXME
 			// fragments
 
 
